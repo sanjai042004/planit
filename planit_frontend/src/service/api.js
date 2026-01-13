@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const api = axios.create({
-    baseURL:"https://task-manager-pt2y.onrender.com/api"})
+    baseURL:"https://planit-ikfy.onrender.com/api"})
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
