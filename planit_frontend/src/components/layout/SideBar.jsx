@@ -3,7 +3,7 @@ import { useTask } from "../../context/TaskContext";
 import { ProgressCard } from "./ProgressCard";
 
 export const SideBar = ({ setView, isOpen, onClose }) => {
-  const { pendingCount, completedCount, clearTasks } = useTask();
+  const { taskCount, pendingCount, completedCount, clearTasks } = useTask();
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -27,113 +27,110 @@ export const SideBar = ({ setView, isOpen, onClose }) => {
 
       {/* Sidebar */}
       <aside
-        className={`
-          fixed lg:static
-          top-0 left-0
-          w-60 md:w-72 lg:w-72
-          h-full
-          bg-white border-r border-gray-200
-          px-4 py-5
-          flex flex-col justify-between
-          z-50
-          overflow-y-auto
-          transform transition-transform duration-300 ease-in-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 lg:transform-none
-        `}
+        className={`fixed lg:static top-0 left-0
+        w-60 md:w-72 min-h-screen
+        bg-white border-r border-gray-200
+        px-4 py-5 lg:py-5
+        shadow-md flex flex-col justify-start
+        z-50 overflow-y-auto
+        transform transition-transform duration-300
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        lg:translate-x-0
+      `}
       >
-        <div className="lg:hidden flex justify-end mb-3">
-          <button
-            onClick={onClose}
-            className="text-xl font-bold text-gray-600"
-          >
+        {/* Mobile Close */}
+        <div className="lg:hidden flex justify-end">
+          <button onClick={onClose} className="text-xl text-gray-500">
             ✕
           </button>
         </div>
 
-        <div>
+        {/* Top Content */}
+        <div className="space-y-9">
           {/* Logo */}
           <Link to="/" onClick={onClose}>
-            <div className=" lg:flex items-center gap-3 cursor-pointer">
-              <div className="w-10 h-10 bg-teal-500 rounded-xl flex items-center justify-center text-white font-bold">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-teal-500 rounded-2xl flex items-center justify-center text-white font-bold">
                 ✓
               </div>
               <div>
-                <h1 className="text-lg font-semibold">PlanIt</h1>
-                <p className="text-xs text-gray-400">
-                  Stay organized, stay focused
-                </p>
+                <h1 className="text-lg font-semibold leading-none">PlanIt</h1>
+                <p className="text-xs text-gray-400">Stay organized</p>
               </div>
             </div>
           </Link>
 
-          {/* Progress */}
-          <div className="mt-6 space-y-5">
+          <div className="mt-6">
             <ProgressCard />
-
-            {/* Pending / Completed */}
-            <div className="grid grid-cols-2 gap-4">
-              <div
-                onClick={() => {
-                  setView("pending");
-                  onClose();
-                }}
-                className="border border-gray-200 rounded-xl p-4 text-center shadow cursor-pointer hover:bg-gray-50"
-              >
-                <p className="text-sm text-gray-400">Pending</p>
-                <h2 className="text-2xl font-bold">{pendingCount}</h2>
-              </div>
-
-              <div
-                onClick={() => {
-                  setView("completed");
-                  onClose();
-                }}
-                className="border border-gray-200 rounded-xl p-4 text-center shadow cursor-pointer hover:bg-gray-50"
-              >
-                <p className="text-sm text-gray-400">Completed</p>
-                <h2 className="text-2xl font-bold">{completedCount}</h2>
-              </div>
-            </div>
           </div>
+          {/* Tasks */}
+          <div className="space-y-2">
+            <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              Tasks
+            </h3>
 
-          {/* Categories */}
-          <div className="mt-8 pb-24">
-            <p className="text-xs text-gray-400 uppercase mb-3">
-              Categories
-            </p>
-            <ul className="space-y-3 text-gray-700">
-              <li
-                onClick={() => {
-                  setView("all");
-                  onClose();
-                }}
-                className="font-medium text-teal-600 cursor-pointer"
-              >
-                All Tasks
-              </li>
-              <li className="cursor-pointer hover:text-teal-600">Food</li>
-              <li className="cursor-pointer hover:text-teal-600">Money</li>
-              <li className="cursor-pointer hover:text-teal-600">Health</li>
-            </ul>
+            {/* All Tasks */}
+            <div
+              onClick={() => {
+                setView("all");
+                onClose();
+              }}
+              className="flex items-center justify-between rounded-md px-4 py-1
+              cursor-pointer hover:bg-gray-50 transition"
+            >
+              <p className="text-sm font-medium text-gray-600">All Tasks</p>
+              <span className="text-xs font-mono text-gray-400">
+                {taskCount}
+              </span>
+            </div>
+
+            {/* Pending */}
+            <div
+              onClick={() => {
+                setView("pending");
+                onClose();
+              }}
+              className="flex items-center justify-between rounded-md px-4 py-1
+              cursor-pointer hover:bg-gray-50 transition"
+            >
+              <p className="text-sm font-medium text-gray-600">Pending</p>
+              <span className="text-xs font-mono text-gray-400">
+                {pendingCount}
+              </span>
+            </div>
+
+            {/* Completed */}
+            <div
+              onClick={() => {
+                setView("completed");
+                onClose();
+              }}
+              className="flex items-center justify-between rounded-md px-4 py-1
+              cursor-pointer hover:bg-gray-50 transition"
+            >
+              <p className="text-sm font-medium text-gray-600">Completed</p>
+              <span className="text-xs font-mono text-gray-400">
+                {completedCount}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* User / Logout */}
+        {/* Footer */}
         {user && (
           <div
             onClick={handleLogout}
-            className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-100 cursor-pointer"
+            className="flex items-center gap-3 mt-64 pt-4
+            border-t border-gray-200 cursor-pointer
+            hover:bg-gray-50 rounded-xl p-2 transition"
           >
             <img
               src={user.photo}
               alt="profile"
-              className="w-10 h-10 rounded-full"
+              className="w-9 h-9 rounded-full"
             />
-            <div className="flex-1">
-              <p className="text-sm font-medium text-gray-800">
-                {user.name}
-              </p>
+            <div>
+              <p className="text-sm font-medium">{user.name}</p>
               <p className="text-xs text-gray-400">Logout</p>
             </div>
           </div>

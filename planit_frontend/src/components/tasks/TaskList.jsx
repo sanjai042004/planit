@@ -6,14 +6,16 @@ export const TaskList = ({ view }) => {
 
   const filteredTasks = tasks.filter((task) => {
     if (view === "pending") return !task.completed;
-    if (view === "completed") return false;
-    if (view === "all") return !task.completed;
-
-    return !task.completed && task.category === view;
+    if (view === "completed") return task.completed;
+    return true;
   });
 
   if (filteredTasks.length === 0) {
-    return <p className="text-gray-400 mt-4">No Tasks Found</p>;
+    return (
+      <p className="text-gray-400 mt-4 text-center">
+        No Tasks
+      </p>
+    );
   }
 
   return (
@@ -24,4 +26,3 @@ export const TaskList = ({ view }) => {
     </div>
   );
 };
-

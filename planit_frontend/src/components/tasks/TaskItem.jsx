@@ -46,23 +46,20 @@ export const TaskItem = ({ task }) => {
 
   const handleSave = () => {
     if (!editData.title.trim()) return;
-    updateTask(task._id, editData); // ✅ FIX
+    updateTask(task._id, editData);
     setIsEditing(false);
   };
 
   return (
     <div className="bg-white p-4 rounded-lg shadow space-y-2">
       <div className="flex items-start gap-3">
-        {/* ✅ Toggle ONLY on checkbox */}
         <div
           onClick={() => toggleTask(task._id)}
           className={`w-5 h-5 rounded-full border-2 cursor-pointer flex items-center justify-center ${
             task.completed ? "bg-teal-500 border-teal-500" : "border-gray-400"
           }`}
         >
-          {task.completed && (
-            <div className="text-white font-bold">✓</div>
-          )}
+          {task.completed && <span className="text-white text-xs">✓</span>}
         </div>
 
         <div className="flex-1">
@@ -134,9 +131,8 @@ export const TaskItem = ({ task }) => {
             >
               Edit
             </button>
-
             <button
-              onClick={() => deleteTask(task._id)} // ✅ FIX
+              onClick={() => deleteTask(task._id)}
               className="text-red-500 cursor-pointer"
             >
               Delete

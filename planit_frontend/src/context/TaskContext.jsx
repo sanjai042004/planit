@@ -73,7 +73,7 @@ export const TaskProvider = ({ children }) => {
       console.error(err.response?.data?.message);
     }
   };
-
+  const taskCount = tasks.length;
   const completedCount = tasks.filter((t) => t.completed).length;
   const pendingCount = tasks.length - completedCount;
   const progress =
@@ -88,6 +88,7 @@ export const TaskProvider = ({ children }) => {
         toggleTask,
         deleteTask,
         updateTask,
+        taskCount,
         completedCount,
         pendingCount,
         progress,

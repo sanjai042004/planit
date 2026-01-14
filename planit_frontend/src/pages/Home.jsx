@@ -3,7 +3,6 @@ import { SideBar } from "../components/layout/SideBar";
 import { Header } from "../components/layout/Header";
 import { TaskForm } from "../components/tasks/TaskForm";
 import { TaskList } from "../components/tasks/TaskList";
-import { CompletedList } from "../components/tasks/CompletedList";
 import { EmptyState } from "../components/ui/EmptyState";
 import { useTask } from "../context/TaskContext";
 import { Loader } from "../components/ui/Loader";
@@ -12,7 +11,7 @@ export const Home = () => {
   const { tasks, addTask, loading } = useTask();
 
   const [showForm, setShowForm] = useState(false);
-  const [view, setView] = useState("pending");
+  const [view, setView] = useState("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleAdd = async (data) => {
@@ -51,14 +50,7 @@ export const Home = () => {
 
         <div className="mt-6">
           {!loading && tasks.length === 0 && <EmptyState />}
-
-          {!loading && tasks.length > 0 && view !== "completed" && (
-            <TaskList view={view} />  
-          )}
-
-          {!loading && tasks.length > 0 && view === "completed" && (
-            <CompletedList view={view} />  
-          )}
+          {!loading && tasks.length > 0 && <TaskList view={view} />}
         </div>
       </main>
     </div>
