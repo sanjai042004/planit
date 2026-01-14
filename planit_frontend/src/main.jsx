@@ -9,3 +9,6 @@ createRoot(document.getElementById("root")).render(
     <RouterProvider router={router} />
   </TaskProvider>
 );
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js");
+}

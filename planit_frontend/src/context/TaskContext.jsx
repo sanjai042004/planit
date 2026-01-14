@@ -34,7 +34,9 @@ export const TaskProvider = ({ children }) => {
       const res = await api.post("/tasks", {
         title: taskData.title,
         description: taskData.description || "",
+        category: taskData.category,
       });
+
       setTasks((prev) => [res.data, ...prev]);
     } catch (err) {
       console.error(err.response?.data?.message);
@@ -89,7 +91,7 @@ export const TaskProvider = ({ children }) => {
         completedCount,
         pendingCount,
         progress,
-        clearTasks
+        clearTasks,
       }}
     >
       {children}

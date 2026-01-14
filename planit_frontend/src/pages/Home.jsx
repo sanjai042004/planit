@@ -23,7 +23,8 @@ export const Home = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-       {loading && <Loader />}
+      {loading && <Loader />}
+
       <SideBar
         setView={setView}
         isOpen={sidebarOpen}
@@ -49,16 +50,14 @@ export const Home = () => {
         )}
 
         <div className="mt-6">
-          {loading && (
-            <p className="text-center text-gray-500 mt-10">Loading tasks...</p>
-          )}
-
           {!loading && tasks.length === 0 && <EmptyState />}
 
-          {!loading && tasks.length > 0 && view === "pending" && <TaskList />}
+          {!loading && tasks.length > 0 && view !== "completed" && (
+            <TaskList view={view} />  
+          )}
 
           {!loading && tasks.length > 0 && view === "completed" && (
-            <CompletedList />
+            <CompletedList view={view} />  
           )}
         </div>
       </main>

@@ -4,6 +4,7 @@ export const TaskForm = ({ onAdd, onCancel }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    category: "Food", // ✅ default category
   });
 
   const handleChange = (e) => {
@@ -19,9 +20,15 @@ export const TaskForm = ({ onAdd, onCancel }) => {
     onAdd({
       title: formData.title.trim(),
       description: formData.description.trim(),
+      category: formData.category, // ✅ important
     });
 
-    setFormData({ title: "", description: "" });
+    // reset form
+    setFormData({
+      title: "",
+      description: "",
+      category: "Food",
+    });
   };
 
   return (
@@ -29,6 +36,7 @@ export const TaskForm = ({ onAdd, onCancel }) => {
       onSubmit={handleSubmit}
       className="bg-white p-4 rounded-xl shadow space-y-3"
     >
+      {/* Title */}
       <input
         type="text"
         name="title"
@@ -39,6 +47,7 @@ export const TaskForm = ({ onAdd, onCancel }) => {
         className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none"
       />
 
+      {/* Description */}
       <textarea
         name="description"
         placeholder="Add a description (optional)"
@@ -47,11 +56,24 @@ export const TaskForm = ({ onAdd, onCancel }) => {
         className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none resize-none"
       />
 
+      {/* Category */}
+      <select
+        name="category"
+        value={formData.category}
+        onChange={handleChange}
+        className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none"
+      >
+        <option value="Food">Food</option>
+        <option value="Money">Money</option>
+        <option value="Health">Health</option>
+      </select>
+
+      {/* Actions */}
       <div className="flex justify-end gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="text-gray-500 cursor-pointer hover:bg-gray-100 rounded-lg px-5 py-2"
+          className="text-gray-500 hover:bg-gray-100 rounded-lg px-5 py-2"
         >
           Cancel
         </button>
@@ -59,7 +81,7 @@ export const TaskForm = ({ onAdd, onCancel }) => {
         <button
           type="submit"
           disabled={!formData.title.trim()}
-          className="bg-teal-500 text-white px-5 py-2 rounded-lg cursor-pointer disabled:opacity-50"
+          className="bg-teal-500 text-white px-5 py-2 rounded-lg disabled:opacity-50"
         >
           + Add Task
         </button>
