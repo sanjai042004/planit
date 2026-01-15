@@ -3,11 +3,14 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/router.jsx";
 import { TaskProvider } from "./context/TaskContext.jsx";
+import { CategoryProvider } from "./context/CategoriesContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <TaskProvider>
-    <RouterProvider router={router} />
-  </TaskProvider>
+  <CategoryProvider>
+    <TaskProvider>
+      <RouterProvider router={router} />
+    </TaskProvider>
+  </CategoryProvider>
 );
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/sw.js");

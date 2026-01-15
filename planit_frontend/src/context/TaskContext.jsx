@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { api } from "../service/api";
 
 const TaskContext = createContext();
@@ -7,28 +7,43 @@ export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Fetch all tasks
   const fetchTasks = async () => {
     try {
       const res = await api.get("/tasks");
       setTasks(res.data);
     } catch (err) {
       console.error(err.response?.data?.message);
+
+      // 🔐 Auto logout on unauthorized
+      if (err.response?.status === 401) {
+        clearTasks();
+        localStorage.removeItem("token");
+      }
     } finally {
       setLoading(false);
     }
   };
 
+  // 🔹 Initial load
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetchTasks();
+
+    if (token) {
+      fetchTasks();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
+  // 🔹 Clear tasks (logout)
   const clearTasks = () => {
     setTasks([]);
   };
 
+  // 🔹 Add task
   const addTask = async (taskData) => {
-    if (!taskData.title.trim()) return;
+    if (!taskData.title?.trim()) return;
 
     try {
       const res = await api.post("/tasks", {
@@ -43,6 +58,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  // 🔹 Toggle completed
   const toggleTask = async (id) => {
     try {
       const res = await api.patch(`/tasks/${id}/completed`);
@@ -54,6 +70,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  // 🔹 Update task
   const updateTask = async (id, updateData) => {
     try {
       const res = await api.put(`/tasks/${id}`, updateData);
@@ -65,6 +82,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  // 🔹 Delete task
   const deleteTask = async (id) => {
     try {
       await api.delete(`/tasks/${id}`);
@@ -73,11 +91,19 @@ export const TaskProvider = ({ children }) => {
       console.error(err.response?.data?.message);
     }
   };
+
+  // 🔹 Derived values (performance optimized)
   const taskCount = tasks.length;
-  const completedCount = tasks.filter((t) => t.completed).length;
-  const pendingCount = tasks.length - completedCount;
+
+  const completedCount = useMemo(
+    () => tasks.filter((t) => t.completed).length,
+    [tasks]
+  );
+
+  const pendingCount = taskCount - completedCount;
+
   const progress =
-    tasks.length === 0 ? 0 : Math.round((completedCount / tasks.length) * 100);
+    taskCount === 0 ? 0 : Math.round((completedCount / taskCount) * 100);
 
   return (
     <TaskContext.Provider
@@ -86,13 +112,13 @@ export const TaskProvider = ({ children }) => {
         loading,
         addTask,
         toggleTask,
-        deleteTask,
         updateTask,
+        deleteTask,
+        clearTasks,
         taskCount,
         completedCount,
         pendingCount,
         progress,
-        clearTasks,
       }}
     >
       {children}

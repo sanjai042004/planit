@@ -9,6 +9,7 @@ const {
   toggleCompleted,
   updateTask,
 } = require("../controllers/task.controller");
+
 router.use(auth);
 router.post("/tasks", addTask);
 router.get("/tasks", getTaskByUser);

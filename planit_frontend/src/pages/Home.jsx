@@ -17,7 +17,6 @@ export const Home = () => {
   const handleAdd = async (data) => {
     await addTask(data);
     setShowForm(false);
-    setView("pending");
   };
 
   return (

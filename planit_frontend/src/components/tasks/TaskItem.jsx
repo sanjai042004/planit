@@ -5,12 +5,12 @@ export const TaskItem = ({ task }) => {
   const { toggleTask, updateTask, deleteTask } = useTask();
 
   const createdDate = new Date(task.createdAt);
-
+  
   const date = createdDate.toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
   });
-
+  
   const time = createdDate.toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
@@ -32,23 +32,23 @@ export const TaskItem = ({ task }) => {
 
     completedInfo = `Completed on ${cDate} · ${cTime}`;
   }
-
+  
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
     title: task.title,
     description: task.description || "",
   });
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleSave = () => {
     if (!editData.title.trim()) return;
     updateTask(task._id, editData);
     setIsEditing(false);
   };
+  console.log(task.category);
 
   return (
     <div className="bg-white p-4 rounded-lg shadow space-y-2">

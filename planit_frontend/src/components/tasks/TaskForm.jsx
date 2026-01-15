@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useCategory } from "../../context/CategoriesContext";
 
 export const TaskForm = ({ onAdd, onCancel }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
   });
+  const { selectedCategory } = useCategory();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,6 +21,7 @@ export const TaskForm = ({ onAdd, onCancel }) => {
     onAdd({
       title: formData.title.trim(),
       description: formData.description.trim(),
+      category: selectedCategory === "All" ? "General" : selectedCategory,
     });
 
     setFormData({
@@ -49,9 +52,6 @@ export const TaskForm = ({ onAdd, onCancel }) => {
         onChange={handleChange}
         className="w-full border border-gray-300 rounded-lg px-4 py-2 outline-none resize-none"
       />
-
-      {/* ❌ Category select removed */}
-
       <div className="flex justify-end gap-3">
         <button
           type="button"

@@ -1,14 +1,28 @@
+import { useCategory } from "../../context/CategoriesContext";
 import { useTask } from "../../context/TaskContext";
 import { TaskItem } from "./TaskItem";
 
 export const TaskList = ({ view }) => {
   const { tasks } = useTask();
+  const { selectedCategory } = useCategory();
 
-  const filteredTasks = tasks.filter((task) => {
-    if (view === "pending") return !task.completed;
-    if (view === "completed") return task.completed;
-    return true;
-  });
+  let filteredTasks = tasks;
+
+  // 🔹 Status filter
+  if (view === "pending") {
+    filteredTasks = filteredTasks.filter((t) => !t.completed);
+  }
+
+  if (view === "completed") {
+    filteredTasks = filteredTasks.filter((t) => t.completed);
+  }
+
+  // 🔹 Category filter
+  if (selectedCategory !== "All") {
+    filteredTasks = filteredTasks.filter(
+      (t) => t.category === selectedCategory
+    );
+  }
 
   if (filteredTasks.length === 0) {
     return (
