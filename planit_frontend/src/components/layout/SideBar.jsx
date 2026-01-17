@@ -26,7 +26,6 @@ export const SideBar = ({ setView, view, isOpen, onClose = () => {} }) => {
 
   return (
     <>
-      {/* Mobile Overlay */}
       {isOpen && (
         <div
           onClick={onClose}
@@ -34,7 +33,6 @@ export const SideBar = ({ setView, view, isOpen, onClose = () => {} }) => {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
           fixed lg:static top-0 left-0
@@ -48,7 +46,6 @@ export const SideBar = ({ setView, view, isOpen, onClose = () => {} }) => {
           lg:translate-x-0
         `}
       >
-        {/* Close Button (Mobile) */}
         <div className="lg:hidden flex justify-end">
           <button
             onClick={onClose}
@@ -59,8 +56,7 @@ export const SideBar = ({ setView, view, isOpen, onClose = () => {} }) => {
         </div>
 
         <div className="space-y-9">
-          {/* Logo */}
-          <Link to="/" onClick={onClose}>
+          <Link to="/home" onClick={onClose}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-teal-500 rounded-2xl flex items-center justify-center text-white font-bold">
                 ✓
@@ -72,10 +68,8 @@ export const SideBar = ({ setView, view, isOpen, onClose = () => {} }) => {
             </div>
           </Link>
 
-          {/* Progress */}
           <ProgressCard />
 
-          {/* Task Filters */}
           <div className="space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
               Tasks
@@ -115,11 +109,9 @@ export const SideBar = ({ setView, view, isOpen, onClose = () => {} }) => {
             </div>
           </div>
 
-          {/* Categories */}
           <Categories onClose={onClose} />
         </div>
 
-        {/* User / Logout */}
         {user && (
           <div
             onClick={handleLogout}

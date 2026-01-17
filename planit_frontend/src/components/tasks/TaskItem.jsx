@@ -60,7 +60,6 @@ export const TaskItem = ({ task }) => {
   return (
     <div className="bg-white p-4 rounded-xl shadow-sm space-y-2">
       <div className="flex items-start gap-3">
-        {/* Toggle */}
         <div
           onClick={() => toggleTask(task._id)}
           className={`
@@ -134,7 +133,6 @@ export const TaskItem = ({ task }) => {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex justify-end gap-3 text-sm">
         {isEditing ? (
           <>

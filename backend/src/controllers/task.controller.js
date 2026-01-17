@@ -1,6 +1,5 @@
 const Task = require("../modals/task.model");
 
-//Add task
 const addTask = async (req, res) => {
   try {
     const { title, description = "", category = "All" } = req.body;
@@ -23,7 +22,6 @@ const addTask = async (req, res) => {
   }
 };
 
-//Get all tasks by user
 const getTaskByUser = async (req, res) => {
   try {
     const userId = req.user.uid;
@@ -36,7 +34,6 @@ const getTaskByUser = async (req, res) => {
   }
 };
 
-//Update task
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
@@ -64,7 +61,6 @@ const updateTask = async (req, res) => {
   }
 };
 
-//Delete task
 const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
@@ -84,7 +80,6 @@ const deleteTask = async (req, res) => {
   }
 };
 
-//Toggle completed
 const toggleCompleted = async (req, res) => {
   try {
     const { id } = req.params;

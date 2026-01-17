@@ -23,7 +23,6 @@ export const Header = ({ onMenuClick }) => {
   });
   return (
     <div className="flex items-center gap-3 mb-4">
-      {/* Mobile only */}
       <button
         onClick={onMenuClick}
         className="lg:hidden p-2 border border-gray-300 rounded-md text-gray-400"

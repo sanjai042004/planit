@@ -16,16 +16,14 @@ export const Home = () => {
   const [view, setView] = useState("all");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // 🔥 Reset view when category changes
   useEffect(() => {
     setView("all");
   }, [selectedCategory]);
 
-  // 🔥 FINAL FIX — force category here
   const handleAdd = async (data) => {
     await addTask({
       ...data,
-      category: selectedCategory, // ✅ GUARANTEED CATEGORY
+      category: selectedCategory, 
     });
     setShowForm(false);
   };
@@ -39,7 +37,6 @@ export const Home = () => {
         </div>
       )}
 
-      {/* Sidebar */}
       <SideBar
         setView={setView}
         view={view}
@@ -47,7 +44,6 @@ export const Home = () => {
         onClose={() => setSidebarOpen(false)}
       />
 
-      {/* Main */}
       <main className="flex-1 p-4 lg:p-6">
         <Header onMenuClick={() => setSidebarOpen(true)} />
 
@@ -55,7 +51,7 @@ export const Home = () => {
           <button
             onClick={() => setShowForm(true)}
             className="w-full border-2 border-dashed rounded-xl p-4 mt-4
-              text-left text-teal-600 hover:bg-teal-50 transition"
+              text-left text-teal-600 hover:bg-teal-50 transition cursor-pointer"
           >
             + Add a New Task...
           </button>
@@ -64,6 +60,7 @@ export const Home = () => {
         {showForm && (
           <div className="mt-4">
             <TaskForm
+             category={selectedCategory} 
               onAdd={handleAdd}
               onCancel={() => setShowForm(false)}
             />
