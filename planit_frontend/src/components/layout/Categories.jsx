@@ -1,11 +1,7 @@
 import { useCategory } from "../../context/CategoriesContext";
-import { AddCategory } from "./AddCategory";
-
-const DEFAULT_CATEGORIES = ["Work", "Personal", "Study", "Health", "Finance"];
 
 export const Categories = ({ onClose = () => {} }) => {
-  const { categories, selectedCategory, setSelectedCategory, deleteCategory } =
-    useCategory();
+  const { categories, selectedCategory, setSelectedCategory } = useCategory();
 
   return (
     <div className="space-y-2 mt-6">
@@ -23,29 +19,19 @@ export const Categories = ({ onClose = () => {} }) => {
               setSelectedCategory(cat);
               onClose();
             }}
-            className={`flex items-center justify-between
-              rounded-md px-4 py-1 cursor-pointer
-              transition group
-              ${isActive ? "bg-gray-100 text-gray-900" : "hover:bg-gray-50"}`}
+            className={`
+              px-4 py-1 rounded-md cursor-pointer transition
+              ${
+                isActive
+                  ? "bg-gray-100 text-gray-900 font-semibold"
+                  : "hover:bg-gray-50 text-gray-700"
+              }
+            `}
           >
-            <p className="text-sm font-medium">{cat}</p>
-
-            {!DEFAULT_CATEGORIES.includes(cat) && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteCategory(cat);
-                }}
-                className="text-xs text-red-400
-                opacity-0 group-hover:opacity-100 transition"
-              >
-                ×
-              </button>
-            )}
+            {cat}
           </div>
         );
       })}
-      <AddCategory />
     </div>
   );
 };

@@ -1,39 +1,31 @@
-import { useCategory } from "../../context/CategoriesContext";
 import { useTask } from "../../context/TaskContext";
+import { useCategory } from "../../context/CategoriesContext";
 import { TaskItem } from "./TaskItem";
+import { EmptyState } from "../ui/EmptyState";
 
 export const TaskList = ({ view }) => {
   const { tasks } = useTask();
   const { selectedCategory } = useCategory();
 
-  let filteredTasks = tasks;
-
-  // 🔹 Status filter
-  if (view === "pending") {
-    filteredTasks = filteredTasks.filter((t) => !t.completed);
-  }
-
-  if (view === "completed") {
-    filteredTasks = filteredTasks.filter((t) => t.completed);
-  }
-
-  // 🔹 Category filter
-  if (selectedCategory !== "All") {
-    filteredTasks = filteredTasks.filter(
-      (t) => t.category === selectedCategory
-    );
-  }
+  const filteredTasks = tasks
+    .filter((task) => {
+      if (view === "pending") return !task.completed;
+      if (view === "completed") return task.completed;
+      return true;
+    })
+    .filter((task) => {
+      if (selectedCategory !== "All") {
+        return task.category === selectedCategory;
+      }
+      return true;
+    });
 
   if (filteredTasks.length === 0) {
-    return (
-      <p className="text-gray-400 mt-4 text-center">
-        No Tasks
-      </p>
-    );
+    return <EmptyState />;
   }
 
   return (
-    <div className="mt-4 space-y-3">
+    <div className="space-y-3 mt-4">
       {filteredTasks.map((task) => (
         <TaskItem key={task._id} task={task} />
       ))}

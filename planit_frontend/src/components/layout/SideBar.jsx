@@ -3,9 +3,10 @@ import { useTask } from "../../context/TaskContext";
 import { ProgressCard } from "./ProgressCard";
 import { Categories } from "./Categories";
 
-const navItemClass ="flex items-center justify-between rounded-md px-4 py-1 cursor-pointer transition";
+const navItemClass =
+  "flex items-center justify-between rounded-md px-4 py-1 cursor-pointer transition";
 
-export const SideBar = ({ setView, view, isOpen, onClose }) => {
+export const SideBar = ({ setView, view, isOpen, onClose = () => {} }) => {
   const { taskCount, pendingCount, completedCount, clearTasks } = useTask();
   const navigate = useNavigate();
 
@@ -19,10 +20,13 @@ export const SideBar = ({ setView, view, isOpen, onClose }) => {
   };
 
   const getActiveClass = (v) =>
-    view === v ? "bg-gray-100 text-gray-900" : "hover:bg-gray-50";
+    view === v
+      ? "bg-gray-100 text-gray-900 font-semibold"
+      : "hover:bg-gray-50 text-gray-700";
 
   return (
     <>
+      {/* Mobile Overlay */}
       {isOpen && (
         <div
           onClick={onClose}
@@ -30,24 +34,32 @@ export const SideBar = ({ setView, view, isOpen, onClose }) => {
         />
       )}
 
+      {/* Sidebar */}
       <aside
-        className={`fixed lg:static top-0 left-0
-        w-60 md:w-72 min-h-screen
-        bg-white border-r border-gray-200
-        px-4 py-5
-        shadow-md flex flex-col
-        z-50 overflow-y-auto
-        transform transition-transform duration-300
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:translate-x-0`}
+        className={`
+          fixed lg:static top-0 left-0
+          w-60 md:w-72 min-h-screen
+          bg-white border-r border-gray-200
+          px-4 py-5
+          shadow-md flex flex-col
+          z-50 overflow-y-auto
+          transform transition-transform duration-300
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0
+        `}
       >
+        {/* Close Button (Mobile) */}
         <div className="lg:hidden flex justify-end">
-          <button onClick={onClose} className="text-xl text-gray-500">
+          <button
+            onClick={onClose}
+            className="text-xl text-gray-500 hover:text-gray-700"
+          >
             ✕
           </button>
         </div>
 
         <div className="space-y-9">
+          {/* Logo */}
           <Link to="/" onClick={onClose}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-teal-500 rounded-2xl flex items-center justify-center text-white font-bold">
@@ -60,8 +72,10 @@ export const SideBar = ({ setView, view, isOpen, onClose }) => {
             </div>
           </Link>
 
+          {/* Progress */}
           <ProgressCard />
 
+          {/* Task Filters */}
           <div className="space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
               Tasks
@@ -101,15 +115,19 @@ export const SideBar = ({ setView, view, isOpen, onClose }) => {
             </div>
           </div>
 
+          {/* Categories */}
           <Categories onClose={onClose} />
         </div>
 
+        {/* User / Logout */}
         {user && (
           <div
             onClick={handleLogout}
-            className="flex items-center gap-3 mt-auto pt-4
-            border-t border-gray-200 cursor-pointer
-            hover:bg-gray-50 rounded-xl p-2 transition"
+            className="
+              flex items-center gap-3 mt-auto pt-4
+              border-t border-gray-200 cursor-pointer
+              hover:bg-gray-50 rounded-xl p-2 transition
+            "
           >
             <img
               src={user.photo || "/avatar.png"}

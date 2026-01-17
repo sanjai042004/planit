@@ -1,13 +1,24 @@
-import { createContext, useContext, useEffect, useState, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import { api } from "../service/api";
 
-const TaskContext = createContext();
+const TaskContext = createContext(null);
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch all tasks
+  //Clear tasks (used on logout / 401)
+  const clearTasks = () => {
+    setTasks([]);
+  };
+
+  //Fetch all tasks
   const fetchTasks = async () => {
     try {
       const res = await api.get("/tasks");
@@ -15,7 +26,7 @@ export const TaskProvider = ({ children }) => {
     } catch (err) {
       console.error(err.response?.data?.message);
 
-      // 🔐 Auto logout on unauthorized
+      //  Auto logout on unauthorized
       if (err.response?.status === 401) {
         clearTasks();
         localStorage.removeItem("token");
@@ -25,7 +36,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Initial load
+  //Initial load
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -36,19 +47,14 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
-  // 🔹 Clear tasks (logout)
-  const clearTasks = () => {
-    setTasks([]);
-  };
-
-  // 🔹 Add task
+  //Add task
   const addTask = async (taskData) => {
     if (!taskData.title?.trim()) return;
 
     try {
       const res = await api.post("/tasks", {
-        title: taskData.title,
-        description: taskData.description || "",
+        title: taskData.title.trim(),
+        description: taskData.description?.trim() || "",
         category: taskData.category,
       });
 
@@ -58,7 +64,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Toggle completed
+  //Toggle completed
   const toggleTask = async (id) => {
     try {
       const res = await api.patch(`/tasks/${id}/completed`);
@@ -70,7 +76,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Update task
+  //Update task
   const updateTask = async (id, updateData) => {
     try {
       const res = await api.put(`/tasks/${id}`, updateData);
@@ -82,7 +88,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Delete task
+  //Delete task
   const deleteTask = async (id) => {
     try {
       await api.delete(`/tasks/${id}`);
@@ -92,7 +98,7 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
-  // 🔹 Derived values (performance optimized)
+  //Derived values (memoized)
   const taskCount = tasks.length;
 
   const completedCount = useMemo(
@@ -102,8 +108,10 @@ export const TaskProvider = ({ children }) => {
 
   const pendingCount = taskCount - completedCount;
 
-  const progress =
-    taskCount === 0 ? 0 : Math.round((completedCount / taskCount) * 100);
+  const progress = useMemo(() => {
+    if (taskCount === 0) return 0;
+    return Math.round((completedCount / taskCount) * 100);
+  }, [taskCount, completedCount]);
 
   return (
     <TaskContext.Provider
@@ -126,4 +134,12 @@ export const TaskProvider = ({ children }) => {
   );
 };
 
-export const useTask = () => useContext(TaskContext);
+export const useTask = () => {
+  const context = useContext(TaskContext);
+
+  if (!context) {
+    throw new Error("useTask must be used within TaskProvider");
+  }
+
+  return context;
+};
